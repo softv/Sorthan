@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sorthan Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Exo+2:wght@300;400;600;700;800;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/jpg" href="srthn.jpg" style="border-radius: 80;">
+<style>
+  /* Vazirmatn از cdn.fontcdn.ir — بدون نیاز به فیلترشکن */
+  @font-face {
+    font-family: 'Vazirmatn';
+    src: url('https://cdn.fontcdn.ir/Font/Persian/Vazirmatn/Vazirmatn-Light.woff2') format('woff2');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Vazirmatn';
+    src: url('https://cdn.fontcdn.ir/Font/Persian/Vazirmatn/Vazirmatn-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Vazirmatn';
+    src: url('https://cdn.fontcdn.ir/Font/Persian/Vazirmatn/Vazirmatn-SemiBold.woff2') format('woff2');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Vazirmatn';
+    src: url('https://cdn.fontcdn.ir/Font/Persian/Vazirmatn/Vazirmatn-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'Vazirmatn';
+    src: url('https://cdn.fontcdn.ir/Font/Persian/Vazirmatn/Vazirmatn-Black.woff2') format('woff2');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+  }
+</style>
+<style>
+  :root {
+    --c1: #00ffe7;
+    --c2: #ff00c8;
+    --c3: #ffe600;
+    --c4: #7b2fff;
+    --c5: #00ff6a;
+    --bg-deep: #03010f;
+    --bg-mid: #07041a;
+    --glow1: 0 0 30px #00ffe780, 0 0 80px #00ffe730;
+    --glow2: 0 0 30px #ff00c880, 0 0 80px #ff00c830;
+    --glow3: 0 0 30px #ffe60080, 0 0 80px #ffe60030;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg-deep);
+    color: #e8e0ff;
+    font-family: 'Vazirmatn', 'Syne', sans-serif;
+    overflow-x: hidden;
+  }
+  summary {
+    text-align: center;
+    font-family: 'Vazirmatn', 'Syne', sans-serif;
+    cursor: pointer;
+  }
+
+  /* Stars canvas */
+  #stars-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Nebula blobs */
+  .nebula {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.18;
+    pointer-events: none;
+    z-index: 0;
+    animation: nebula-drift 20s ease-in-out infinite alternate;
+  }
+  .nebula-1 { width: 600px; height: 600px; background: radial-gradient(circle, #7b2fff, transparent); top: -100px; left: -100px; animation-delay: 0s; }
+  .nebula-2 { width: 500px; height: 500px; background: radial-gradient(circle, #ff00c8, transparent); top: 40%; right: -50px; animation-delay: -5s; }
+  .nebula-3 { width: 700px; height: 700px; background: radial-gradient(circle, #00ffe7, transparent); bottom: -100px; left: 30%; animation-delay: -10s; }
+  .nebula-4 { width: 400px; height: 400px; background: radial-gradient(circle, #ffe600, transparent); top: 60%; left: 10%; animation-delay: -7s; }
+  @keyframes nebula-drift {
+    0% { transform: translate(0,0) scale(1); }
+    100% { transform: translate(40px, 30px) scale(1.1); }
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 1000;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 48px;
+    background: linear-gradient(180deg, rgba(3,1,15,0.95) 0%, transparent 100%);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(0,255,231,0.08);
+  }
+  .nav-logo {
+    font-family: 'Bebas Neue', 'Rajdhani', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 400;
+    letter-spacing: 8px;
+    background: linear-gradient(135deg, var(--c1), var(--c2), var(--c3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+    text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    color: rgba(232,224,255,0.7);
+    text-decoration: none;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 3px;
+    transition: color 0.3s, text-shadow 0.3s;
+    text-transform: uppercase;
+  }
+  .nav-links a:hover {
+    color: var(--c1);
+    text-shadow: var(--glow1);
+  }
+
+  /* SECTIONS */
+  section { position: relative; z-index: 1; min-height: 100vh; }
+
+  /* ========== HERO ========== */
+  #home {
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    padding: 120px 40px 80px;
+    overflow: hidden;
+  }
+
+  .hero-orbit-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid rgba(0,255,231,0.12);
+    animation: spin-slow linear infinite;
+  }
+  .ring-1 { width: 500px; height: 500px; top: 50%; left: 50%; transform: translate(-50%,-50%); animation-duration: 30s; }
+  .ring-2 { width: 700px; height: 700px; top: 50%; left: 50%; transform: translate(-50%,-50%); animation-duration: 50s; animation-direction: reverse; border-color: rgba(255,0,200,0.08); }
+  .ring-3 { width: 900px; height: 900px; top: 50%; left: 50%; transform: translate(-50%,-50%); animation-duration: 70s; border-color: rgba(255,230,0,0.06); }
+  @keyframes spin-slow { to { transform: translate(-50%,-50%) rotate(360deg); } }
+
+  .ring-dot {
+    position: absolute;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    top: -4px; left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 0 10px 3px var(--c1);
+  }
+  .ring-1 .ring-dot { background: var(--c1); box-shadow: 0 0 12px 4px var(--c1); }
+  .ring-2 .ring-dot { background: var(--c2); box-shadow: 0 0 12px 4px var(--c2); }
+  .ring-3 .ring-dot { background: var(--c3); box-shadow: 0 0 12px 4px var(--c3); }
+
+  .hero-tag {
+    font-size: 0.75rem; letter-spacing: 6px; text-transform: uppercase;
+    color: var(--c1); margin-bottom: 20px;
+    opacity: 0; animation: fade-up 0.8s 0.3s forwards;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', 'Exo 2', monospace;
+    font-size: clamp(3.5rem, 10vw, 8rem);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -2px;
+    background: linear-gradient(135deg, #ffffff 0%, var(--c1) 35%, var(--c2) 65%, var(--c3) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-size: 200% 200%;
+    animation: gradient-shift 6s ease infinite, fade-up 0.8s 0.5s both;
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 2;
+  }
+  @keyframes gradient-shift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-sub {
+    font-size: 1.15rem; color: rgba(232,224,255,0.6);
+    max-width: 620px; line-height: 2;
+    margin-bottom: 50px;
+    opacity: 0; animation: fade-up 0.8s 0.7s forwards;
+    font-family: 'Vazirmatn', sans-serif;
+    font-weight: 300;
+    letter-spacing: 0.3px;
+  }
+
+  /* Code snippet in hero */
+  .hero-code-strip {
+    display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+    margin-bottom: 50px;
+    opacity: 0; animation: fade-up 0.8s 0.9s forwards;
+  }
+  .code-pill {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 12px 20px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    color: rgba(232,224,255,0.8);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .code-pill::before {
+    content: '';
+    position: absolute; top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0,255,231,0.1), transparent);
+    transition: left 0.5s;
+  }
+  .code-pill:hover::before { left: 100%; }
+  .code-pill:hover {
+    border-color: var(--c1);
+    box-shadow: 0 0 20px rgba(0,255,231,0.2);
+    transform: translateY(-3px);
+  }
+  .code-pill .lang { color: var(--c3); font-weight: bold; }
+  .code-pill .kw { color: var(--c2); }
+  .code-pill .fn { color: var(--c1); }
+  .code-pill .str { color: var(--c5); }
+
+  .hero-cta {
+    display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;
+    opacity: 0; animation: fade-up 0.8s 1.1s forwards;
+  }
+  .btn-primary {
+    padding: 14px 40px;
+    background: linear-gradient(135deg, var(--c4), var(--c2));
+    border: none; border-radius: 4px;
+    color: white; font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem; letter-spacing: 4px; text-transform: uppercase;
+    cursor: none; text-decoration: none;
+    position: relative; overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    font-weight: 700;
+  }
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 40px rgba(255,0,200,0.4);
+  }
+  .btn-secondary {
+    padding: 14px 40px;
+    background: transparent;
+    border: 1px solid var(--c1);
+    border-radius: 4px;
+    color: var(--c1); font-family: 'Rajdhani', sans-serif;
+    font-size: 1rem; letter-spacing: 4px; text-transform: uppercase;
+    cursor: none; text-decoration: none;
+    transition: all 0.3s;
+    font-weight: 700;
+  }
+  .btn-secondary:hover {
+    background: rgba(0,255,231,0.1);
+    box-shadow: var(--glow1);
+    transform: translateY(-3px);
+  }
+
+  /* Scroll indicator */
+  .scroll-hint {
+    position: absolute; bottom: 40px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    opacity: 0.5;
+    animation: float-hint 2s ease-in-out infinite;
+  }
+  .scroll-hint span { font-size: 0.65rem; letter-spacing: 4px; text-transform: uppercase; color: var(--c1); }
+  .scroll-line {
+    width: 1px; height: 50px;
+    background: linear-gradient(180deg, var(--c1), transparent);
+  }
+  @keyframes float-hint {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(8px); }
+  }
+
+  /* ========== SECTION HEADER ========== */
+  .section-header {
+    text-align: center;
+    margin-bottom: 64px;
+    position: relative;
+  }
+  .section-label {
+    font-size: 0.65rem; letter-spacing: 6px; text-transform: uppercase;
+    color: var(--c2); margin-bottom: 12px; display: block;
+    font-family: 'Rajdhani', sans-serif;
+    font-weight: 600;
+  }
+  .section-title {
+    font-family: 'Exo 2', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, #fff 30%, var(--c1) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 16px;
+    letter-spacing: 2px;
+  }
+  .section-line {
+    width: 60px; height: 2px;
+    background: linear-gradient(90deg, var(--c2), var(--c1));
+    margin: 0 auto;
+    box-shadow: 0 0 10px var(--c1);
+  }
+
+  /* ========== SECTION WRAPPER ========== */
+  .section-wrap { padding: 120px 80px; }
+  @media(max-width:768px) { .section-wrap { padding: 80px 24px; } }
+
+  /* ========== ABOUT ========== */
+  #about { background: linear-gradient(180deg, transparent, rgba(123,47,255,0.05), transparent); }
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+    max-width: 1100px; margin: 0 auto;
+  }
+  @media(max-width:768px) { .about-grid { grid-template-columns: 1fr; } }
+
+  .about-text p {
+    color: rgba(232,224,255,0.7); line-height: 1.9; margin-bottom: 20px;
+    font-size: 1rem;
+  }
+  .about-text .highlight { color: var(--c1); font-weight: 600; }
+  .about-text .highlight2 { color: var(--c2); font-weight: 600; }
+  .about-text .highlight3 { color: var(--c3); font-weight: 600; }
+
+  .about-stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 24px;
+  }
+  .stat-box {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(0,255,231,0.15);
+    border-radius: 12px; padding: 28px;
+    text-align: center;
+    transition: all 0.4s;
+    position: relative; overflow: hidden;
+  }
+  .stat-box::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--c1), transparent);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .stat-box:hover::before { opacity: 1; }
+  .stat-box:hover {
+    border-color: rgba(0,255,231,0.4);
+    background: rgba(0,255,231,0.05);
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(0,255,231,0.1);
+  }
+  .stat-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 2.5rem; font-weight: 900;
+    background: linear-gradient(135deg, var(--c1), var(--c3));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    display: block; margin-bottom: 8px;
+  }
+  .stat-label { font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.6; }
+
+  /* ========== PROGRAMS ========== */
+  #programs { background: linear-gradient(180deg, transparent, rgba(0,255,231,0.03), transparent); }
+  .programs-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 24px; max-width: 1200px; margin: 0 auto;
+  }
+  .program-card {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px; padding: 36px;
+    transition: all 0.4s;
+    position: relative; overflow: hidden;
+  }
+  .program-card::after {
+    content: ''; position: absolute;
+    bottom: 0; left: 0; right: 0; height: 2px;
+    background: var(--accent, var(--c1));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.4s;
+  }
+  .program-card:hover::after { transform: scaleX(1); }
+  .program-card:hover {
+    background: rgba(255,255,255,0.06);
+    transform: translateY(-8px);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+    border-color: rgba(255,255,255,0.15);
+  }
+  .program-icon {
+    font-size: 2.5rem; margin-bottom: 20px; display: block;
+    filter: drop-shadow(0 0 10px var(--accent, var(--c1)));
+  }
+  .program-card h3 {
+    font-family: 'Exo 2', sans-serif; font-size: 1.05rem; font-weight: 700;
+    letter-spacing: 2px; margin-bottom: 12px;
+    color: var(--accent, var(--c1));
+  }
+  .program-card p { color: rgba(232,224,255,0.6); line-height: 1.8; font-size: 0.92rem; font-family: 'Vazirmatn', sans-serif; font-weight: 300; }
+
+  /* ========== GAMES ========== */
+  #games { background: linear-gradient(180deg, transparent, rgba(255,0,200,0.04), transparent); }
+  .games-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 32px; max-width: 1200px; margin: 0 auto;
+  }
+  .game-card {
+    border-radius: 16px; overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: all 0.4s;
+    position: relative;
+    background: rgba(255,255,255,0.02);
+  }
+  .game-card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+    border-color: rgba(255,0,200,0.3);
+  }
+  .game-thumb {
+    height: 180px; position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .game-thumb-inner {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 5rem;
+    position: relative;
+  }
+  .game-thumb::after {
+    content: 'SOON';
+    position: absolute; top: 12px; right: 12px;
+    background: var(--c2); color: #000;
+    font-family: 'Rajdhani', sans-serif; font-size: 0.7rem; font-weight: 900;
+    letter-spacing: 3px; padding: 4px 10px; border-radius: 4px;
+  }
+  .game-info { padding: 24px; }
+  .game-info h3 {
+    font-family: 'Exo 2', sans-serif; font-size: 1.1rem; font-weight: 800;
+    letter-spacing: 3px; margin-bottom: 8px; color: white;
+  }
+  .game-info p { color: rgba(232,224,255,0.5); font-size: 0.88rem; line-height: 1.7; margin-bottom: 16px; font-family: 'Vazirmatn', sans-serif; font-weight: 300; }
+  .game-tag {
+    display: inline-block;
+    padding: 4px 14px; border-radius: 20px;
+    font-size: 0.72rem; letter-spacing: 2px; text-transform: uppercase;
+    font-weight: 700; font-family: 'Rajdhani', sans-serif;
+  }
+
+  /* ========== SUBSIDIARIES ========== */
+  #subsidiaries { background: linear-gradient(180deg, transparent, rgba(123,47,255,0.04), transparent); }
+  .sub-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 24px; max-width: 1100px; margin: 0 auto;
+  }
+  .sub-card {
+    padding: 40px 32px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.07);
+    background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    transition: all 0.4s; text-align: center; position: relative; overflow: hidden;
+  }
+  .sub-card::before {
+    content: ''; position: absolute;
+    top: -50%; left: -50%; width: 200%; height: 200%;
+    background: conic-gradient(from 0deg, transparent 70%, rgba(0,255,231,0.05) 100%);
+    animation: sub-rotate 8s linear infinite;
+    opacity: 0; transition: opacity 0.4s;
+  }
+  .sub-card:hover::before { opacity: 1; }
+  @keyframes sub-rotate { to { transform: rotate(360deg); } }
+  .sub-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(0,255,231,0.3);
+    box-shadow: 0 30px 60px rgba(0,255,231,0.08);
+  }
+  .sub-icon { font-size: 3rem; margin-bottom: 20px; display: block; }
+  .sub-card h3 {
+    font-family: 'Exo 2', sans-serif; font-size: 0.95rem; font-weight: 700;
+    letter-spacing: 3px; margin-bottom: 12px; color: var(--c1);
+  }
+  .sub-card p { color: rgba(232,224,255,0.55); font-size: 0.88rem; line-height: 1.8; font-family: 'Vazirmatn', sans-serif; font-weight: 300; }
+
+  /* ========== GOALS ========== */
+  #goals { background: linear-gradient(180deg, transparent, rgba(255,230,0,0.03), transparent); }
+  .goals-wrap { max-width: 900px; margin: 0 auto; }
+  .goal-item {
+    display: flex; gap: 32px; align-items: flex-start;
+    margin-bottom: 48px; position: relative;
+    opacity: 0; transform: translateX(30px);
+    transition: all 0.6s;
+  }
+  .goal-item.visible { opacity: 1; transform: translateX(0); }
+  .goal-item::before {
+    content: ''; position: absolute;
+    left: 24px; top: 52px; bottom: -48px; width: 1px;
+    background: linear-gradient(180deg, rgba(0,255,231,0.3), transparent);
+  }
+  .goal-item:last-child::before { display: none; }
+  .goal-num {
+    flex-shrink: 0;
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    border: 1px solid var(--c1);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Rajdhani', sans-serif; font-size: 1.1rem; font-weight: 700;
+    color: var(--c1);
+    box-shadow: var(--glow1);
+    background: rgba(0,255,231,0.05);
+  }
+  .goal-content h3 {
+    font-family: 'Exo 2', sans-serif; font-size: 1.2rem; font-weight: 700;
+    color: white; margin-bottom: 10px; letter-spacing: 1px;
+  }
+  .goal-content p { color: rgba(232,224,255,0.6); line-height: 1.9; font-size: 0.95rem; font-family: 'Vazirmatn', sans-serif; font-weight: 300; }
+
+  /* ========== FOOTER ========== */
+  footer {
+    position: relative; z-index: 1;
+    border-top: 1px solid rgba(0,255,231,0.1);
+    padding: 60px 80px;
+    text-align: center;
+    background: linear-gradient(180deg, transparent, rgba(0,0,0,0.5));
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.5rem; font-weight: 400; letter-spacing: 12px;
+    background: linear-gradient(135deg, var(--c1), var(--c2), var(--c3));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    display: block; margin-bottom: 24px;
+  }
+  footer p { color: rgba(232,224,255,0.3); font-size: 0.8rem; letter-spacing: 2px; font-family: 'Rajdhani', sans-serif; }
+
+  /* Glitch effect */
+  .glitch {
+    position: relative;
+  }
+  .glitch::before, .glitch::after {
+    content: attr(data-text);
+    position: absolute; top: 0; left: 0; right: 0;
+    background: linear-gradient(135deg, #ffffff 0%, var(--c1) 35%, var(--c2) 65%, var(--c3) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .glitch::before {
+    animation: glitch-1 4s 2s infinite;
+    clip-path: polygon(0 15%, 100% 15%, 100% 30%, 0 30%);
+  }
+  .glitch::after {
+    animation: glitch-2 4s 2.1s infinite;
+    clip-path: polygon(0 60%, 100% 60%, 100% 75%, 0 75%);
+  }
+  @keyframes glitch-1 {
+    0%,94%,100% { transform: none; opacity: 0; }
+    95% { transform: translateX(-3px); opacity: 0.8; }
+    97% { transform: translateX(3px); opacity: 0.8; }
+    99% { transform: translateX(-2px); opacity: 0.8; }
+  }
+  @keyframes glitch-2 {
+    0%,94%,100% { transform: none; opacity: 0; }
+    95% { transform: translateX(3px); opacity: 0.8; }
+    97% { transform: translateX(-3px); opacity: 0.8; }
+    99% { transform: translateX(2px); opacity: 0.8; }
+  }
+
+  /* Scan line overlay */
+  body::after {
+    content: '';
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent, transparent 2px,
+      rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px
+    );
+    pointer-events: none; z-index: 999998;
+    animation: scan 10s linear infinite;
+  }
+  @keyframes scan {
+    0% { background-position: 0 0; }
+    100% { background-position: 0 100px; }
+  }
+
+  /* Intersection observer reveal */
+  .reveal { opacity: 0; transform: translateY(30px); transition: all 0.7s cubic-bezier(0.16,1,0.3,1); }
+  .reveal.visible { opacity: 1; transform: none; }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-trail"></div>
+
+<!-- Nebulas -->
+<div class="nebula nebula-1"></div>
+<div class="nebula nebula-2"></div>
+<div class="nebula nebula-3"></div>
+<div class="nebula nebula-4"></div>
+
+<!-- Stars -->
+<canvas id="stars-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <a href="#home" class="nav-logo">SORTHAN</a>
+  <ul class="nav-links">
+    <li><a href="#about">درباره ما</a></li>
+    <li><a href="#programs">برنامه‌ها</a></li>
+    <li><a href="#games">بازی‌ها</a></li>
+    <li><a href="#subsidiaries">زیرمجموعه‌ها</a></li>
+    <li><a href="#goals">هدف ما</a></li>
+  </ul>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section id="home">
+  <div class="hero-orbit-ring ring-1"><span class="ring-dot"></span></div>
+  <div class="hero-orbit-ring ring-2"><span class="ring-dot"></span></div>
+  <div class="hero-orbit-ring ring-3"><span class="ring-dot"></span></div>
+
+  <div class="hero-tag">✦ خوش آمدید به استودیوی سورتان ✦</div>
+
+  <h1 class="hero-title glitch" data-text="SORTHAN">SORTHAN</h1>
+
+  <p class="hero-sub">
+    ما یک استودیوی خلاق در فضای دیجیتال هستیم — جایی که کد، هنر و تخیل به هم می‌رسند
+    تا تجربه‌های فراموش‌نشدنی بسازیم.
+  </p>
+
+  <!-- Code snippets -->
+  <div class="hero-code-strip">
+    <div class="code-pill">
+      <span class="lang">HTML</span> &lt;<span class="kw">world</span> <span class="fn">id</span>=<span class="str">"sorthan"</span>&gt;
+    </div>
+    <div class="code-pill">
+      <span class="lang">Python</span> <span class="kw">def</span> <span class="fn">dream</span>(): <span class="kw">return</span> <span class="str">"∞"</span>
+    </div>
+    <div class="code-pill">
+      <span class="lang">Ruby</span> puts <span class="str">"Hello, Universe!"</span>
+    </div>
+  </div>
+
+  <div class="hero-cta">
+    <a href="#about" class="btn-primary">سورتان را کشف کنید</a>
+    <a href="#games" class="btn-secondary">بازی‌های ما</a>
+  </div>
+
+  <div class="scroll-hint">
+    <span>بیشتر</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section id="about">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <span class="section-label">// 01 — who_we_are</span>
+      <h2 class="section-title">درباره ما</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>
+          <span class="highlight">Sorthan Studio</span> یک استودیوی خلاق و فناوری‌محور است که در دل فضای دیجیتال متولد شده. ما در دنیایی بین <span class="highlight2">هنر، برنامه‌نویسی و بازی‌سازی</span> زندگی می‌کنیم.
+        </p>
+        <p>
+          افراد تیم سورتان خلاقانی هستند که میخوان به دنیای برنامه نویسی و فناوری کمک کنند!
+        </p>
+        <p>
+          🌐 <span class="highlight">HTML/CSS/JS</span> — پایه و اساس هر چیزی که در مرورگر زندگی می‌کند. از صفحات ساده تا اپلیکیشن‌های پیچیده تعاملی. با HTML ساختار می‌سازیم، با CSS روح می‌دمیم، و با JS حیات می‌بخشیم.
+        </p>
+        <p>
+          🐍 <span class="highlight2">Python</span> — زبان قدرتمند، ساده و همه‌کاره. از هوش مصنوعی و تحلیل داده تا اتوماسیون و بک‌اند. Python زبانی‌ست که با ایده‌ها صحبت می‌کند.
+        </p>
+        <p>
+          💎 <span class="highlight3">Ruby</span> — زبانی که برای خوشحالی برنامه‌نویسان ساخته شده. با فلسفه‌ی «Convention over Configuration»، Ruby راهی است برای ساختن سریع، زیبا و هوشمندانه.
+        </p>
+      </div>
+
+      <div class="about-stats reveal">
+        <div class="stat-box">
+          <span class="stat-num">3+</span>
+          <span class="stat-label">زبان برنامه‌نویسی</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">∞</span>
+          <span class="stat-label">ایده‌های خلاق</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">100%</span>
+          <span class="stat-label">تعهد به کیفیت</span>
+        </div>
+        <div class="stat-box">
+          <span class="stat-num">🌌</span>
+          <span class="stat-label">کهکشانی فکر کن</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROGRAMS ===== -->
+<section id="programs">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <span class="section-label">// 02 — our_programs</span>
+      <h2 class="section-title">برنامه‌های ما</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="programs-grid">
+      <div class="program-card reveal" style="--accent: var(--c1); cursor: pointer;">
+        <span class="program-icon">🎨</span>
+        <h3>PaintX</h3>
+        <p>طراحی و نقاشی با چاشنی سایبر پانک!</p>
+      </div>
+      <div class="program-card reveal" style="--accent: var(--c5)">
+        <span class="program-icon">🛠️</span>
+        <h3>HLCoder</h3>
+        <p>برنامه نویسی اچ تی ام ال در موبایل!</p>
+      </div>
+      <div class="program-card reveal" style="--accent: var(--c4)">
+        <span class="program-icon">📡</span>
+        <h3>API & Backend</h3>
+        <p>معماری و توسعه سرویس‌های بک‌اند مقیاس‌پذیر با Ruby on Rails و Python FastAPI.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== GAMES ===== -->
+<section id="games">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <span class="section-label">// 03 — our_games</span>
+      <h2 class="section-title">بازی‌های ما</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="games-grid">
+      <div class="game-card reveal">
+        <div class="game-thumb">
+          <div class="game-thumb-inner" style="background: linear-gradient(135deg, #0a0020, #1a0040, #0d1a3d);">
+            🚀
+          </div>
+        </div>
+        <div class="game-info">
+          <h3>V : The Heart Of Age</h3>
+          <p>یک بازی اکشن و ارکید فضایی! یه نابغه یه هوش مصنوعی خودساز اختراع میکنه و باعث نابودی دنیا میشه. یه جنگ باحال توی کهکشان</p>
+          <span class="game-tag" style="background: rgba(0,255,231,0.15); color: var(--c1); border: 1px solid rgba(0,255,231,0.3);">Space Shooter</span>
+        </div>
+      </div>
+      <div class="game-card reveal">
+        <div class="game-thumb">
+          <div class="game-thumb-inner" style="background: linear-gradient(135deg, #200010, #400020, #2d0d1a);">
+            ⚔️
+          </div>
+        </div>
+        <div class="game-info">
+          <h3>Escape From The Galaxy</h3>
+          <p>رباتها به زمین حمله کردن! تو در نقش آرون باید شمشیر آندرومدا رو پیدا کنی و جهان رو نجات بدی.</p>
+          <span class="game-tag" style="background: rgba(255,0,200,0.15); color: var(--c2); border: 1px solid rgba(255,0,200,0.3);">Action RPG</span>
+        </div>
+      </div>
+      <div class="game-card reveal">
+        <div class="game-thumb">
+          <div class="game-thumb-inner" style="background: linear-gradient(135deg, #001a10, #003020, #0a2d1a);">
+            🧩
+          </div>
+        </div>
+        <div class="game-info">
+          <h3>Five Night With Ilusion</h3>
+          <p>یه بازی خیلی ترسناک (پیشنهاد : تنهایی بازیش نکن)</p>
+          <span class="game-tag" style="background: rgba(0,255,106,0.15); color: var(--c5); border: 1px solid rgba(0,255,106,0.3);">Puzzle</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!--=====Dore HA=====-->
+<details>
+  <summary>
+  دوره ی طراحی سایت مقدماتی
+  </summary>
+  <p> test</p>
+</details>
+
+<!-- ===== SUBSIDIARIES ===== -->
+<section id="subsidiaries">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <span class="section-label">// 04 — sub_units</span>
+      <h2 class="section-title">زیرمجموعه‌ها</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="sub-grid">
+      <div class="sub-card reveal">
+        <span class="sub-icon">🎬</span>
+        <h3>MadnNeb(MadNebula)</h3>
+        <p>زیر مجموعه بازی سازی سورتان!</p>
+      </div>
+      <div class="sub-card reveal">
+        <span class="sub-icon">🔬</span>
+        <h3>Colper</h3>
+        <p>زیر مجموعه توسعه برنامه های exe و apk ما.</p>
+      </div>
+      <div class="sub-card reveal">
+        <span class="sub-icon">📚</span>
+        <h3>SORTHAN Learn</h3>
+        <p>آموزش برنامه‌نویسی و طراحی به زبان فارسی. از صفر تا قهرمان، کنار شما هستیم.</p>
+      </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== GOALS ===== -->
+<section id="goals">
+  <div class="section-wrap">
+    <div class="section-header reveal">
+      <span class="section-label">// 05 — our_mission</span>
+      <h2 class="section-title">هدف ما</h2>
+      <div class="section-line"></div>
+    </div>
+
+    <div class="goals-wrap">
+      <div class="goal-item">
+        <div class="goal-num">01</div>
+        <div class="goal-content">
+          <h3>ساخت هسته ی دلفین</h3>
+          <p>یه هوش مصنوعی خفن تو راهه!</p>
+        </div>
+      </div>
+      <div class="goal-item">
+        <div class="goal-num">02</div>
+        <div class="goal-content">
+          <h3>دوره های پر کیفیت اما رایگان</h3>
+          <p>می‌خواهیم جوانان ایرانی ببینند که با خلاقیت و فناوری می‌توان در سطح جهانی رقابت کرد. Sorthan یک نمونه است، نه استثنا.</p>
+        </div>
+      </div>
+      <div class="goal-item">
+        <div class="goal-num">03</div>
+        <div class="goal-content">
+          <h3>اتصال هنر و فناوری</h3>
+          <p>مرز بین هنرمند و مهندس را از بین می‌بریم. بهترین محصولات دیجیتال جایی متولد می‌شوند که کد با زیبایی‌شناسی ملاقات می‌کند.</p>
+        </div>
+      </div>
+      <div class="goal-item">
+        <div class="goal-num">04</div>
+        <div class="goal-content">
+          <h3>برنامه های پرکیفیت</h3>
+          <p>برنامه هایی با رابط کاربری زیبا و بسیار کاربردی.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer>
+  <img src="srthn.jpg" style="display: block; margin-left: auto; margin-right: auto; border-radius: 50%; height: auto; width: 50%;">
+  <span class="footer-logo">SORTHAN</span>
+  <p>© 2026 Sorthan Studio — کهکشانی فکر کن، دیجیتال بساز ✦</p>
+</footer>
+
+<script>
+  // ===== Custom cursor — desktop/mouse only =====
+  const isTouchOnly = window.matchMedia('(pointer: coarse)').matches;
+  const cursor = document.getElementById('cursor');
+  const trail = document.getElementById('cursor-trail');
+  if (!isTouchOnly) {
+    let mx = 0, my = 0;
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = (mx - 7) + 'px';
+      cursor.style.top = (my - 7) + 'px';
+      setTimeout(() => {
+        trail.style.left = (mx - 18) + 'px';
+        trail.style.top = (my - 18) + 'px';
+      }, 60);
+    });
+    document.addEventListener('mousedown', () => cursor.style.transform = 'scale(1.8)');
+    document.addEventListener('mouseup', () => cursor.style.transform = 'scale(1)');
+  }
+
+  // ===== Stars canvas =====
+  const canvas = document.getElementById('stars-canvas');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+  resize(); window.addEventListener('resize', resize);
+
+  function initStars() {
+    stars = [];
+    for (let i = 0; i < 250; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.5 + 0.2,
+        alpha: Math.random(),
+        speed: Math.random() * 0.003 + 0.001,
+        color: ['#ffffff','#00ffe7','#ff00c8','#ffe600','#7b2fff'][Math.floor(Math.random()*5)]
+      });
+    }
+  }
+  initStars();
+
+  function drawStars() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    stars.forEach(s => {
+      s.alpha += s.speed;
+      if (s.alpha > 1 || s.alpha < 0) s.speed *= -1;
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = s.color + Math.floor(s.alpha * 255).toString(16).padStart(2,'0');
+      ctx.fill();
+    });
+    requestAnimationFrame(drawStars);
+  }
+  drawStars();
+
+  // ===== Intersection observer =====
+  const revealEls = document.querySelectorAll('.reveal, .goal-item');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.1 });
+  revealEls.forEach(el => observer.observe(el));
+
+  // ===== Parallax nebula on scroll =====
+  window.addEventListener('scroll', () => {
+    const y = window.scrollY;
+    document.querySelectorAll('.nebula').forEach((n, i) => {
+      n.style.transform = `translateY(${y * (0.05 + i * 0.02)}px)`;
+    });
+  });
+
+  // ===== Nav active link highlight =====
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let cur = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 200) cur = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + cur ? 'var(--c1)' : '';
+    });
+  });
+</script>
+</body>
+</html>
